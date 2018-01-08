@@ -143,10 +143,11 @@ Route::get('waybill/loadusers', function(Request $request){
 	$data = User::where('location', $location)->get();
 	}
 	else{			}
-
+/*
 	if(Auth::user()->priv == 1){
 		$data = User::all();
 	}	
+	*/
     return Response::json($data);
 	//return View::make('waybill.receive')->with('data',$data,'return',$wType);
 });
@@ -180,7 +181,7 @@ Route::get('waybill/loadItems', function(Request $request){
 	}	
     return Response::json($data);
 	//return View::make('waybill.receive')->with('data',$data,'return',$wType);
-});
+})->middleware('auth');
 
 Route::get('waybill/load', function(Request $request){
 	$loc = $request->location;
@@ -189,21 +190,17 @@ Route::get('waybill/load', function(Request $request){
 	
 	if ($loc!=''){
 		if($wType=='LOAN'){
-	$data = doc::where('wType', $wType)->where(function ($q){
-	$q->where('receiveStatus', 'OPEN')->orWhere('receiveStatus', 'RECEIVED')->orWhere('receiveStatus', 'RETURNED');})->where(function($g) use ($loc){
-		$g->where('sentTo',$loc)->orWhere('sentFrom',$loc);})->orderby('sentDate', 'DESC')->get();	
+	$data = doc::where('wType', $wType)->where(function($g) use ($loc){
+		$g->where('sentTo',$loc)->orWhere('sentFrom',$loc);})->whereIn('receiveStatus', ['OPEN','RECEIVED','RETURNED'])->orderby('sentDate', 'DESC')->get();	
 		}else{
-	$data = doc::where('wType', $wType)->where(function ($q){
-	$q->where('receiveStatus', 'OPEN')->orWhere('receiveStatus', 'RECEIVED')->orWhere('receiveStatus', 'RETURNED');})->where(function($g) use ($loc){
+	$data = doc::where('wType', $wType)->whereIn('receiveStatus', ['OPEN', 'RECEIVED','RETURNED'])->where(function($g) use ($loc){
 		$g->where('sentTo',$loc);})->orderby('sentDate', 'DESC')->get();				
 		}
 	}
 	else{$data = [];}
 	if($id!=''){
-	$data = doc::where('wType',$wType)->where('id', $id)->where(function ($q){
-	$q->where('receiveStatus', 'OPEN')->orWhere('receiveStatus', 'RECEIVED');})->orderby('sentDate', 'DESC')->get();
+	$data = doc::where('wType',$wType)->where('id', $id)->whereIn('receiveStatus', ['OPEN','RECEIVED', 'RETURNED'])->orderby('sentDate', 'DESC')->get();
 	}
-	
     return Response::json($data);
 	//return View::make('waybill.receive')->with('data',$data,'return',$wType);
 });
