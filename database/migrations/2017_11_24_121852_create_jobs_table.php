@@ -13,7 +13,7 @@ class CreateJobsTable extends Migration
      */
     public function up()
     {
-        Schema::create('jobs', function (Blueprint $table) {
+  /*      Schema::create('jobs', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('queue');
             $table->longText('payload');
@@ -23,7 +23,7 @@ class CreateJobsTable extends Migration
             $table->unsignedInteger('created_at');
 
             $table->index(['queue', 'reserved_at']);
-        });
+        }); */
     }
 
     /**

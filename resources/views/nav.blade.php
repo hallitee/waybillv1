@@ -12,6 +12,18 @@
                             </div>
                             <!-- /input-group -->
                         </li>
+						@if(Auth::user()->admin)
+                        <li>
+                            <a href="{{ route('config') }}"><i class="fa fa-gear fa-fw"></i>Configuration<span class="fa arrow"></span></a>
+							
+							<ul class="nav nav-second-level">
+                                <li>
+                                    <a href="{{ route('config') }}">Email Recipients</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+						@endif
                         <li>
                             <a href="{{ route('home') }}"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
                         </li>
